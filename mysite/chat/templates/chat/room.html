@@ -1,20 +1,134 @@
 <!-- chat/templates/chat/room.html -->
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8"/>
-    <title>Chat Room</title>
+    <meta charset="utf-8" />
+    <style>
+        html{
+            width: 100%;
+            height: 100%;
+        }
+        body {
+            width: 100%;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #121424;
+            display: flex;
+            overflow: hidden;
+            justify-content: center;
+            align-items: center;
+            flex-flow: column;
+        }
+
+        .box {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-flow: column;
+        }
+
+        #chat-log {
+            font-family: Arial, Helvetica, sans-serif;
+            width: 90vw;
+            max-width: 95vw;
+            min-width: 320px;
+            height: 70vh;
+            max-height: 90vh;
+            min-height: 200px;
+            overflow: scroll;
+            padding: 1vw;
+            font-size: 1.3em;
+            color: #000B20;
+            outline: none;
+            line-height: 40px;
+            background-color: #E8F5DA;
+        }
+
+        #send {
+            width: 100%;
+            display: flex;
+            justify-content: space-around;
+            outline: none;
+        }
+
+
+        .form__field {
+            font-family: inherit;
+            width: 95%;
+            border: 0;
+            border-bottom: 2px solid gray;
+            outline: 0;
+            height: 3vh;
+            font-size: 1.3rem;
+            color: white;
+            padding: 7px 0;
+            margin-right: 5px;
+            padding-left: 10px;
+            background: transparent;
+            transition: all 80ms ease-in-out;
+        }
+
+
+        .form__field:focus {
+            padding-bottom: 6px;
+            font-weight: 700;
+            border-width: 3px;
+            border-image: linear-gradient(to right, #11998e, #38ef7d);
+            border-image-slice: 1;
+
+        }
+
+        .btn{
+            outline: 0;
+            width: 5%;
+            font-size: small;
+            min-width: 50px;
+            padding: 0;
+            background-color: #38ef7d;
+            transition-duration: 0.3s;
+            opacity: 80%;
+            border: none;
+            font-size: 13px;
+            color: #fff;
+        }
+        .btn:hover{
+            opacity: 100%;
+        }
+        #room{
+            position: relative;
+            left: 0;
+            top: 0;
+            font-size: 26px;
+            color: white;
+            
+        }
+        #user{
+            width: 100%;
+            height: 100%;
+            color: white;
+        }
+    </style>
+    <title>FNL P - 1</title>
 </head>
+
 <body>
-    <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-    <input id="chat-message-input" type="text" size="100"><br>
-    <input id="chat-message-submit" type="button" value="Send">
+
+    <div class="box">
+        <div style="width: 100%; display: relative;">
+            <span id="room"></span>
+        </div>
+        <textarea id="chat-log" readonly></textarea>
+        <div id="send">
+            <input id="chat-message-input" class="form__field" type="text">
+            <input id="chat-message-submit" class="btn" type="button" value="SEND">
+        </div>
+    </div>
     {{ room_name|json_script:"room-name" }}
-    {{ my_name|json_script:"my-name" }}
     <script>
         const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        const myName = JSON.parse(document.getElementById('my-name').textContent);
-
+        var getName = prompt('NAME plz.');
         const chatSocket = new WebSocket(
             'ws://'
             + window.location.host
@@ -23,31 +137,40 @@
             + '/'
         );
 
-        chatSocket.onmessage = function(e) {
+
+
+        document.getElementById('room').innerHTML = roomName;
+        chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             document.querySelector('#chat-log').value += (data.message + '\n');
+            document.querySelector('#user').value = (data.user + '\n');
         };
 
-        chatSocket.onclose = function(e) {
+        chatSocket.onclose = function (e) {
             console.error('Chat socket closed unexpectedly');
         };
 
         document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
             if (e.keyCode === 13) {  // enter, return
                 document.querySelector('#chat-message-submit').click();
             }
         };
 
-        document.querySelector('#chat-message-submit').onclick = function(e) {
+        document.querySelector('#chat-message-submit').onclick = function (e) {
             const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
+            const message = messageInputDom.value; //보낼 내용
             chatSocket.send(JSON.stringify({
-                "name": myName,
-                'message': message
+                'message': getName + " : " + message
             }));
             messageInputDom.value = '';
         };
+
+        var x = document.querySelector("#chat-log");
+        x.addEventListener('input', () => {
+            x.scrollTop = x.scrollHeight;
+        })
     </script>
 </body>
+
 </html>

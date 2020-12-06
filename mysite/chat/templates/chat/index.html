@@ -1,38 +1,126 @@
 <!-- chat/templates/chat/index.html -->
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="utf-8"/>
-    <title>Chat Rooms</title>
+    <meta charset="utf-8" />
+    <title>FNL P - 1</title>
+    <style>
+        html {
+            width: 100%;
+            height: 100%;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #121424;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .text-center {
+            color: #fff;
+            text-transform: uppercase;
+            font-size: 23px;
+            margin: -50px 0 80px 0;
+            display: block;
+            text-align: center;
+        }
+
+        #box {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #121424;
+            border-radius: 3px;
+            padding: 20vh 15vw;
+        }
+
+        .input-container {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .text-center {
+            font-size: 1.5em;
+        }
+
+        .input-container label {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            font-size: 16px;
+            color: #fff;
+            pointer-events: none;
+            transition: all 0.5s ease-in-out;
+        }
+
+        .input-container input {
+            border: 0;
+            border-bottom: 1px solid #555;
+            background: transparent;
+            width: 100%;
+            padding: 8px 0 5px 0;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .input-container input:focus {
+            border: none;
+            outline: none;
+            border-bottom: 1px solid #e74c3c;
+        }
+
+        .btn {
+            color: #fff;
+            background-color: #e74c3c;
+            outline: none;
+            border: 0;
+            color: #fff;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            margin-top: 50px;
+            border-radius: 2px;
+            cursor: pointer;
+            position: relative;
+            left: 25%;
+        }
+
+        .input-container input:focus~label,
+        .input-container input:valid~label {
+            top: -12px;
+            font-size: 12px;
+
+        }
+    </style>
 </head>
+
 <body>
-    What chat room would you like to enter?<br>
-    <input id="room-name-input" type="text" size="100"><br>
-    What's your name?<br>
-    <input id="my-name-input" type="text" size="100"><br>
-    <input id="submit" type="button" value="Enter">
+    <div id="box">
+        <form>
+            <span class="text-center">F N L&nbsp;&nbsp; P&nbsp; - &nbsp;1</span>
+            <div class="input-container">
+                <input id="room-name-input" type="text" required="" />
+                <label>Room Name</label>
+            </div>
+            <button type="button" id="name-submit" class="btn">ENTER</button>
+        </form>
+    </div>
+
+
 
     <script>
         document.querySelector('#room-name-input').focus();
-        document.querySelector('#my-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function(e) {
+        document.querySelector('#room-name-input').onkeyup = function (e) {
             if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#submit').click();
-            } 
-        };
-        document.querySelector('#my-name-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#submit').click();
+                document.querySelector('#name-submit').click();
             }
         };
 
-        document.querySelector('#submit').onclick = function(e) {
+        document.querySelector('#name-submit').onclick = function (e) {
             var roomName = document.querySelector('#room-name-input').value;
-            var myName = document.querySelector('#my-name-input').value;
-            window.location.pathname = '/chat/' + roomName + '/' + myName + '/';
+            window.location.pathname = '/chat/' + roomName + '/';
         };
-
-        
     </script>
 </body>
+
 </html>
